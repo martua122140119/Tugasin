@@ -1,0 +1,68 @@
+.task-form {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+}
+
+.task-form>div {
+    margin-bottom: 20px;
+}
+
+.task-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #555;
+    font-size: 1rem;
+}
+
+.task-form input[type="text"],
+.task-form input[type="date"],
+.task-form textarea,
+.task-form select,
+.task-form input[type="number"] {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #bdc3c7;
+    border-radius: 6px;
+    font-size: 1rem;
+}
+
+.task-form textarea {
+    min-height: 120px;
+}
+
+.task-form button[type="submit"] {
+    background-color: #28a745;
+    color: white;
+    padding: 12px 15px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: background-color 0.3s ease;
+    font-weight: 500;
+}
+
+.task-form button[type="submit"]:hover {
+    background-color: #1e7e34;
+}
+
+/* Responsif untuk TaskForm */
+@media (max-width: 576px) {
+    .task-form {
+        padding: 20px;
+    }
+
+    .task-form label,
+    .task-form input[type="text"],
+    .task-form input[type="date"],
+    .task-form textarea,
+    .task-form select,
+    .task-form input[type="number"],
+    .task-form button[type="submit"] {
+        font-size: 0.9rem;
+    }
+}
