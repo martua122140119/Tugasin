@@ -25,7 +25,7 @@ button {
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: sans-serif;
     line-height: 1.6;
     background-color: #f7f7f7;
     color: #333;
@@ -44,7 +44,7 @@ a {
 }
 
 a:hover {
-    color: #0056b3;
+    color: #000000;
     text-decoration: underline;
 }
 

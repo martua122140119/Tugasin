@@ -71,7 +71,7 @@ function ManageMatkulPage() {
               required
             />
           </div>
-          <button type="submit">Tambah</button>
+          <button className="tambah-button"type="submit">Tambah</button>
         </form>
       </div>
 

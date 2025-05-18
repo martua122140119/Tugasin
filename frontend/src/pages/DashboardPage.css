@@ -1,4 +1,3 @@
-/* src/pages/DashboardPage.css */
 .dashboard-page {
     padding: 30px;
     background-color: #f4f4f4;
@@ -22,21 +21,17 @@
 .dashboard-header .user-info {
     display: flex;
     flex-direction: column;
-    /* Mengubah arah flex menjadi kolom */
     align-items: flex-end;
-    /* Mengatur item agar rata kanan */
 }
 
 .dashboard-header .user-info span {
     margin-bottom: 10px;
-    /* Memberikan jarak antara nama pengguna dan link */
     font-weight: 500;
     color: #555;
 }
 
 .dashboard-header .user-info .logout-button {
     background-color: #e74c3c;
-    /* Warna merah untuk logout */
     color: white;
     padding: 8px 12px;
     border: none;
@@ -45,7 +40,6 @@
     font-size: 0.9rem;
     transition: background-color 0.3s ease;
     margin-top: 10px;
-    /* Memberikan jarak antara link dan tombol logout */
 }
 
 .dashboard-header .user-info .logout-button:hover {
@@ -63,7 +57,7 @@
     text-decoration: underline;
 }
 
-/* Responsive adjustments */
+
 @media (max-width: 768px) {
     .dashboard-header {
         flex-direction: column;
