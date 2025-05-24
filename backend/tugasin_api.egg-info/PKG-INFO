@@ -1,0 +1,12 @@
+Metadata-Version: 2.4
+Name: tugasin_api
+Version: 0.1
+Requires-Dist: pyramid
+Requires-Dist: sqlalchemy
+Requires-Dist: psycopg2-binary
+Requires-Dist: pyramid_jwt
+Requires-Dist: cornice
+Requires-Dist: pyramid_debugtoolbar
+Requires-Dist: waitress
+Requires-Dist: gunicorn
+Dynamic: requires-dist

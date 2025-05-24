@@ -1,0 +1,266 @@
+:root {
+  --background-color-light: #D2D0A0; /* Creamy Yellow - Main Background */
+  --text-color-light: #537D5D;      /* Dark Green - Main Text */
+  --card-bg-light: #FFFFFF;        /* White - Card Background */
+  --card-header-bg-light: #73946B; /* Muted Green - Card Header Background */
+  --card-header-text-light: #FFFFFF; /* White - Card Header Text */
+  --link-color-light: #537D5D;      /* Dark Green - Link Color */
+
+  /* Warna tombol kustom untuk light mode */
+  --btn-primary-bg-light: #537D5D;
+  --btn-primary-text-light: #FFFFFF;
+  --btn-success-bg-light: #73946B;
+  --btn-success-text-light: #FFFFFF;
+  --btn-info-bg-light: #9EBC8A;
+  --btn-info-text-light: #537D5D;
+  --btn-danger-bg-light: #dc3545; /* Tetap merah untuk danger */
+  --btn-danger-text-light: #FFFFFF;
+  --btn-outline-light-border-light: #537D5D;
+  --btn-outline-light-text-light: #537D5D;
+  --btn-secondary-bg-light: #6c757d; /* Default Bootstrap secondary */
+  --btn-secondary-text-light: #FFFFFF;
+}
+
+/* Variabel CSS untuk tema gelap */
+body.dark {
+  --background-color-dark: #537D5D; /* Dark Green - Main Background */
+  --text-color-dark: #D2D0A0;      /* Creamy Yellow - Main Text */
+  --card-bg-dark: #73946B;          /* Muted Green - Card Background */
+  --card-header-bg-dark: #9EBC8A;   /* Light Green - Card Header Background */
+  --card-header-text-dark: #537D5D; /* Dark Green - Card Header Text */
+  --link-color-dark: #9EBC8A;       /* Light Green - Link Color */
+  --text-color-dark-muted: #D2D0A0; /* Creamy Yellow - Muted Text */
+
+  /* Warna tombol kustom untuk dark mode */
+  --btn-primary-bg-dark: #9EBC8A;
+  --btn-primary-text-dark: #537D5D;
+  --btn-success-bg-dark: #D2D0A0;
+  --btn-success-text-dark: #537D5D;
+  --btn-info-bg-dark: #D2D0A0;
+  --btn-info-text-dark: #537D5D;
+  --btn-danger-bg-dark: #dc3545; /* Tetap merah untuk danger */
+  --btn-danger-text-dark: #FFFFFF;
+  --btn-outline-light-border-dark: #D2D0A0;
+  --btn-outline-light-text-dark: #D2D0A0;
+  --btn-secondary-bg-dark: #495057; /* Default Bootstrap secondary dark */
+  --btn-secondary-text-dark: #FFFFFF;
+}
+body {
+  background-color: var(--background-color-light);
+  color: var(--text-color-light);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  font-family: 'Poppins', sans-serif;
+}
+
+body.dark {
+  background-color: var(--background-color-dark);
+  color: var(--text-color-dark);
+}
+
+/* Styling umum untuk komponen Bootstrap yang diadaptasi tema */
+.card {
+  background-color: var(--card-bg-light);
+  color: var(--text-color-light);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body.dark .card {
+  background-color: var(--card-bg-dark);
+  color: var(--text-color-dark);
+}
+
+.card-header {
+  background-color: var(--card-header-bg-light);
+  color: var(--card-header-text-light);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body.dark .card-header {
+  background-color: var(--card-header-bg-dark);
+  color: var(--card-header-text-dark);
+}
+
+/* Mengatasi warna text-muted di dark mode */
+body.dark .text-muted {
+  color: var(--text-color-dark-muted) !important;
+}
+
+/* Penyesuaian Navbar */
+.navbar {
+  transition: background-color 0.3s ease;
+}
+.navbar-brand {
+  color: var(--link-color-light);
+}
+body.dark .navbar-brand {
+    color: var(--link-color-dark);
+}
+.navbar-nav .nav-link {
+    color: var(--link-color-light);
+}
+body.dark .navbar-nav .nav-link {
+    color: var(--link-color-dark);
+}
+body.dark .navbar-text { /* Untuk teks "Halo, user!" */
+    color: var(--text-color-dark);
+}
+
+/* ==============================================================================
+   STYLING TOMBOL KHUSUS BERDASARKAN TEMA
+   ============================================================================== */
+
+/* Tombol Primary */
+.btn-primary {
+  background-color: var(--btn-primary-bg-light) !important;
+  color: var(--btn-primary-text-light) !important;
+  border-color: var(--btn-primary-bg-light) !important;
+}
+.btn-primary:hover {
+  background-color: #456c4d !important; /* Sedikit lebih gelap saat hover */
+  border-color: #456c4d !important;
+}
+body.dark .btn-primary {
+  background-color: var(--btn-primary-bg-dark) !important;
+  color: var(--btn-primary-text-dark) !important;
+  border-color: var(--btn-primary-bg-dark) !important;
+}
+body.dark .btn-primary:hover {
+  background-color: #8db57a !important; /* Sedikit lebih gelap saat hover */
+  border-color: #8db57a !important;
+}
+
+/* Tombol Success */
+.btn-success {
+  background-color: var(--btn-success-bg-light) !important;
+  color: var(--btn-success-text-light) !important;
+  border-color: var(--btn-success-bg-light) !important;
+}
+.btn-success:hover {
+  background-color: #62825a !important;
+  border-color: #62825a !important;
+}
+body.dark .btn-success {
+  background-color: var(--btn-success-bg-dark) !important;
+  color: var(--btn-success-text-dark) !important;
+  border-color: var(--btn-success-bg-dark) !important;
+}
+body.dark .btn-success:hover {
+  background-color: #c1bf91 !important;
+  border-color: #c1bf91 !important;
+}
+
+/* Tombol Info (digunakan untuk tombol edit di TaskCard dan header di ManageMatkulPage) */
+.btn-info {
+  background-color: var(--btn-info-bg-light) !important;
+  color: var(--btn-info-text-light) !important;
+  border-color: var(--btn-info-bg-light) !important;
+}
+.btn-info:hover {
+  background-color: #8eb079 !important;
+  border-color: #8eb079 !important;
+}
+body.dark .btn-info {
+  background-color: var(--btn-info-bg-dark) !important;
+  color: var(--btn-info-text-dark) !important;
+  border-color: var(--btn-info-bg-dark) !important;
+}
+body.dark .btn-info:hover {
+  background-color: #c1bf91 !important;
+  border-color: #c1bf91 !important;
+}
+
+/* Tombol Danger (tetap merah untuk indikasi bahaya) */
+.btn-danger {
+    background-color: var(--btn-danger-bg-light) !important;
+    color: var(--btn-danger-text-light) !important;
+    border-color: var(--btn-danger-bg-light) !important;
+}
+.btn-danger:hover {
+    background-color: #bd2130 !important;
+    border-color: #bd2130 !important;
+}
+body.dark .btn-danger {
+    background-color: var(--btn-danger-bg-dark) !important;
+    color: var(--btn-danger-text-dark) !important;
+    border-color: var(--btn-danger-bg-dark) !important;
+}
+
+/* Tombol Outline Light (digunakan untuk Login/Logout di Navbar) */
+.btn-outline-light {
+    color: var(--btn-outline-light-text-light) !important;
+    border-color: var(--btn-outline-light-border-light) !important;
+}
+.btn-outline-light:hover {
+    background-color: var(--btn-outline-light-border-light) !important;
+    color: #FFFFFF !important;
+}
+body.dark .btn-outline-light {
+    color: var(--btn-outline-light-text-dark) !important;
+    border-color: var(--btn-outline-light-border-dark) !important;
+}
+body.dark .btn-outline-light:hover {
+    background-color: var(--btn-outline-light-border-dark) !important;
+    color: var(--btn-primary-text-dark) !important;
+}
+
+/* Tombol Mode Gelap/Terang (btn-light dan btn-dark yang ada di navbar) */
+/* btn-light adalah tombol yang muncul saat mode terang aktif, ingin beralih ke gelap */
+.btn-light {
+    background-color: var(--btn-primary-bg-light) !important; /* Dark green for light button in light mode */
+    color: var(--btn-primary-text-light) !important;
+    border-color: var(--btn-primary-bg-light) !important;
+}
+.btn-light:hover {
+    background-color: #456c4d !important;
+    border-color: #456c4d !important;
+}
+/* btn-dark adalah tombol yang muncul saat mode gelap aktif, ingin beralih ke terang */
+body.dark .btn-light { /* Ini adalah btn-light yang muncul saat body.dark aktif */
+    background-color: var(--btn-primary-bg-dark) !important;
+    color: var(--btn-primary-text-dark) !important;
+    border-color: var(--btn-primary-bg-dark) !important;
+}
+body.dark .btn-light:hover {
+    background-color: #8db57a !important;
+    border-color: #8db57a !important;
+}
+
+/* Default btn-dark styling, dipakai oleh theme toggle saat mode light */
+.btn-dark {
+    background-color: var(--btn-primary-bg-light) !important;
+    color: var(--btn-primary-text-light) !important;
+    border-color: var(--btn-primary-bg-light) !important;
+}
+.btn-dark:hover {
+    background-color: #456c4d !important;
+    border-color: #456c4d !important;
+}
+body.dark .btn-dark { /* Ini adalah btn-dark yang muncul saat body.dark aktif */
+    background-color: var(--btn-primary-bg-dark) !important;
+    color: var(--btn-primary-text-dark) !important;
+    border-color: var(--btn-primary-bg-dark) !important;
+}
+body.dark .btn-dark:hover {
+    background-color: #8db57a !important;
+    border-color: #8db57a !important;
+}
+
+/* Mengatasi card-header yang menggunakan bg-info (Manage Matkul) */
+.card-header.bg-info {
+    background-color: var(--btn-info-bg-light) !important;
+    color: var(--btn-info-text-light) !important;
+}
+body.dark .card-header.bg-info {
+    background-color: var(--btn-info-bg-dark) !important;
+    color: var(--btn-info-text-dark) !important;
+}
+
+/* Mengatasi card-header yang menggunakan bg-primary (Login/Register) */
+.card-header.bg-primary {
+    background-color: var(--card-header-bg-light) !important;
+    color: var(--card-header-text-light) !important;
+}
+body.dark .card-header.bg-primary {
+    background-color: var(--card-header-bg-dark) !important;
+    color: var(--card-header-text-dark) !important;
+}

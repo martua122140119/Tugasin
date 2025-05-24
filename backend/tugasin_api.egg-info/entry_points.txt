@@ -1,0 +1,5 @@
+[console_scripts]
+initialize_db = tugasin_api.scripts.initializedb:main
+
+[paste.app_factory]
+main = tugasin_api:main

@@ -1,0 +1,169 @@
+// src/pages/LoginRegisterPage.js
+import React, { useState } from 'react';
+import { useAuth } from '../context/AuthContext'; // Import useAuth
+
+function LoginRegisterPage() {
+  const [isLoginMode, setIsLoginMode] = useState(true);
+  const { login, register } = useAuth(); // Dapatkan fungsi login dan register dari context
+
+  const [loginEmail, setLoginEmail] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
+
+  const [registerName, setRegisterName] = useState('');
+  const [registerEmail, setRegisterEmail] = useState('');
+  const [registerPassword, setRegisterPassword] = useState('');
+
+  const [error, setError] = useState(''); // State untuk pesan error
+
+  // Handler untuk submit form Login
+  const handleLoginSubmit = async (e) => { // Buat async function
+    e.preventDefault();
+    setError(''); // Bersihkan error sebelumnya
+    const result = await login(loginEmail, loginPassword);
+    if (!result.success) {
+      setError(result.message || 'Login gagal. Coba lagi.');
+    }
+  };
+
+  // Handler untuk submit form Register
+  const handleRegisterSubmit = async (e) => { // Buat async function
+    e.preventDefault();
+    setError(''); // Bersihkan error sebelumnya
+    const result = await register(registerName, registerEmail, registerPassword);
+    if (!result.success) {
+      setError(result.message || 'Registrasi gagal. Coba lagi.');
+    } else {
+        alert("Registrasi berhasil! Silakan login."); // Beri feedback ke user
+        setIsLoginMode(true); // Langsung alihkan ke mode login
+        // Bersihkan form register
+        setRegisterName('');
+        setRegisterEmail('');
+        setRegisterPassword('');
+    }
+  };
+
+  return (
+    <div className="container mt-5">
+      <div className="row justify-content-center">
+        <div className="col-md-6">
+          <div className="card shadow-lg">
+            <div className="card-header bg-primary text-white text-center py-3">
+              <h3 className="mb-0">{isLoginMode ? 'Login' : 'Register'} Akun</h3>
+            </div>
+            <div className="card-body p-4">
+
+              {error && ( // Tampilkan pesan error jika ada
+                <div className="alert alert-danger" role="alert">
+                  {error}
+                </div>
+              )}
+
+              {isLoginMode ? (
+                // Form Login
+                <form onSubmit={handleLoginSubmit}>
+                  <div className="mb-3">
+                    <label htmlFor="loginEmail" className="form-label">Email address</label>
+                    <input
+                      type="email"
+                      className="form-control"
+                      id="loginEmail"
+                      placeholder="name@example.com"
+                      value={loginEmail}
+                      onChange={(e) => setLoginEmail(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div className="mb-3">
+                    <label htmlFor="loginPassword" className="form-label">Password</label>
+                    <input
+                      type="password"
+                      className="form-control"
+                      id="loginPassword"
+                      placeholder="Password"
+                      value={loginPassword}
+                      onChange={(e) => setLoginPassword(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div className="d-grid gap-2">
+                    <button type="submit" className="btn btn-success btn-lg">Login</button>
+                    <button
+                      type="button"
+                      className="btn btn-link mt-2 text-decoration-none"
+                      onClick={() => {
+                        setIsLoginMode(false);
+                        setLoginEmail('');
+                        setLoginPassword('');
+                        setError(''); // Bersihkan error saat beralih
+                      }}
+                    >
+                      Belum punya akun? Register di sini
+                    </button>
+                  </div>
+                </form>
+              ) : (
+                // Form Register
+                <form onSubmit={handleRegisterSubmit}>
+                  <div className="mb-3">
+                    <label htmlFor="registerName" className="form-label">Nama Lengkap</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="registerName"
+                      placeholder="Nama Lengkap Anda"
+                      value={registerName}
+                      onChange={(e) => setRegisterName(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div className="mb-3">
+                    <label htmlFor="registerEmail" className="form-label">Email address</label>
+                    <input
+                      type="email"
+                      className="form-control"
+                      id="registerEmail"
+                      placeholder="name@example.com"
+                      value={registerEmail}
+                      onChange={(e) => setRegisterEmail(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div className="mb-3">
+                    <label htmlFor="registerPassword" className="form-label">Password</label>
+                    <input
+                      type="password"
+                      className="form-control"
+                      id="registerPassword"
+                      placeholder="Minimal 6 karakter"
+                      value={registerPassword}
+                      onChange={(e) => setRegisterPassword(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div className="d-grid gap-2">
+                    <button type="submit" className="btn btn-primary btn-lg">Register</button>
+                    <button
+                      type="button"
+                      className="btn btn-link mt-2 text-decoration-none"
+                      onClick={() => {
+                        setIsLoginMode(true);
+                        setRegisterName('');
+                        setRegisterEmail('');
+                        setRegisterPassword('');
+                        setError(''); // Bersihkan error saat beralih
+                      }}
+                    >
+                      Sudah punya akun? Login di sini
+                    </button>
+                  </div>
+                </form>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default LoginRegisterPage;
