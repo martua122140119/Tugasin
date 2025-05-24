@@ -1,8 +1,0 @@
-pyramid
-sqlalchemy
-psycopg2-binary
-pyramid_jwt
-cornice
-pyramid_debugtoolbar
-waitress
-gunicorn
