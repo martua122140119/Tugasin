@@ -1,7 +1,5 @@
 # Sistem Tracking Tugas dan Proyek Kuliah - Aplikasi Manajemen Tugas Mahasiswa
 
-![Screenshot Aplikasi](path/to/your/screenshot.png)
-
 ## Deskripsi Aplikasi Web
 
 Aplikasi web ini dirancang untuk membantu mahasiswa mengelola dan memantau semua tugas serta proyek perkuliahan secara terorganisir dan efisien. Dengan antarmuka yang intuitif, mahasiswa dapat mencatat, mengedit, dan menyaring tugas berdasarkan tenggat waktu atau mata kuliah. Fitur autentikasi pengguna memastikan data pribadi tetap aman, sementara fitur *reminder* membantu menghindari keterlambatan pengumpulan. Aplikasi ini bertujuan untuk meningkatkan produktivitas dan mengurangi beban manajemen tugas bagi mahasiswa, dibangun sebagai tugas mata kuliah Pemrograman Web.
