@@ -8,7 +8,7 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
-  const [isAuthChecked, setIsAuthChecked] = useState(false); // BARU: State untuk menandai pemeriksaan autentikasi selesai
+  const [isAuthChecked, setIsAuthChecked] = useState(false);
   const navigate = useNavigate();
 
   const api = axios.create({
@@ -36,7 +36,7 @@ export const AuthProvider = ({ children }) => {
       setIsLoggedIn(true);
       setUser(JSON.parse(userData));
     }
-    setIsAuthChecked(true); // SET INI MENJADI TRUE SETELAH PEMERIKSAAN SELESAI
+    setIsAuthChecked(true);
   }, []);
 
   const getRegisteredUsers = () => {
@@ -72,7 +72,6 @@ export const AuthProvider = ({ children }) => {
         return { success: false, message: 'Email atau password salah.' };
       }
     } catch (error) {
-      console.error('Login error:', error);
       return { success: false, message: 'Terjadi kesalahan saat login.' };
     }
   };
@@ -80,6 +79,7 @@ export const AuthProvider = ({ children }) => {
   const register = async (name, email, password) => {
     try {
       const registeredUsers = getRegisteredUsers();
+
       if (registeredUsers.some((u) => u.email === email)) {
         return { success: false, message: 'Email sudah terdaftar. Silakan login.' };
       }
@@ -91,7 +91,6 @@ export const AuthProvider = ({ children }) => {
 
       return { success: true, message: 'Registrasi berhasil! Silakan login.' };
     } catch (error) {
-      console.error('Register error:', error);
       return { success: false, message: 'Terjadi kesalahan saat registrasi.' };
     }
   };
@@ -105,7 +104,6 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    // BARU: Tambahkan isAuthChecked ke value Context
     <AuthContext.Provider value={{ isLoggedIn, user, login, register, logout, api, isAuthChecked }}>
       {children}
     </AuthContext.Provider>

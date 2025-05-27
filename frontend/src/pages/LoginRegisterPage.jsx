@@ -12,27 +12,35 @@ function LoginRegisterPage() {
   const [registerEmail, setRegisterEmail] = useState('');
   const [registerPassword, setRegisterPassword] = useState('');
 
-  const [error, setError] = useState('');
+  const [message, setMessage] = useState('');
+  const [messageType, setMessageType] = useState('');
 
-  // Handler untuk submit form Login
+  const showMessage = (msg, type) => {
+    setMessage(msg);
+    setMessageType(type);
+    setTimeout(() => {
+      setMessage('');
+      setMessageType('');
+    }, 5000);
+  };
+
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    setMessage('');
     const result = await login(loginEmail, loginPassword);
     if (!result.success) {
-      setError(result.message || 'Login gagal. Coba lagi.');
+      showMessage(result.message || 'Login gagal. Coba lagi.', 'danger');
     }
   };
 
-  // Handler untuk submit form Register
   const handleRegisterSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    setMessage('');
     const result = await register(registerName, registerEmail, registerPassword);
     if (!result.success) {
-      setError(result.message || 'Registrasi gagal. Coba lagi.');
+      showMessage(result.message || 'Registrasi gagal. Coba lagi.', 'danger');
     } else {
-        alert("Registrasi berhasil! Silakan login.");
+        showMessage(result.message || 'Registrasi berhasil! Silakan login.', 'success');
         setIsLoginMode(true);
         setRegisterName('');
         setRegisterEmail('');
@@ -46,13 +54,13 @@ function LoginRegisterPage() {
         <div className="col-md-6">
           <div className="card shadow-lg">
             <div className="card-header bg-primary text-white text-center py-3">
-              <h3 className="mb-0">{isLoginMode ? 'Login' : 'Register'} Akun</h3>
+              <h3>{isLoginMode ? 'Login' : 'Register'} Akun</h3>
             </div>
             <div className="card-body p-4">
 
-              {error && (
-                <div className="alert alert-danger" role="alert">
-                  {error}
+              {message && (
+                <div className={`alert alert-${messageType}`} role="alert">
+                  {message}
                 </div>
               )}
 
@@ -92,7 +100,8 @@ function LoginRegisterPage() {
                         setIsLoginMode(false);
                         setLoginEmail('');
                         setLoginPassword('');
-                        setError('');
+                        setMessage('');
+                        setMessageType('');
                       }}
                     >
                       Belum punya akun? Register di sini
@@ -148,7 +157,8 @@ function LoginRegisterPage() {
                         setRegisterName('');
                         setRegisterEmail('');
                         setRegisterPassword('');
-                        setError('');
+                        setMessage('');
+                        setMessageType('');
                       }}
                     >
                       Sudah punya akun? Login di sini

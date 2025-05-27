@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import ConfirmationModal from '../components/ConfirmationModal'; // Import komponen modal
 
 function ManageMatkulPage() {
-  // Data mata kuliah: Muat dari localStorage, atau gunakan dummy jika kosong
   const [courses, setCourses] = useState(() => {
-    const savedCourses = localStorage.getItem('matkuls'); // Gunakan key 'matkuls'
+    const savedCourses = localStorage.getItem('matkuls');
     return savedCourses ? JSON.parse(savedCourses) : [
       { id: 1, nama_matkul: 'Pemrograman Web', semester: 'Genap 2024/2025' },
       { id: 2, nama_matkul: 'Basis Data', semester: 'Genap 2024/2025' },
@@ -12,23 +12,23 @@ function ManageMatkulPage() {
     ];
   });
 
-  // Simpan data mata kuliah ke localStorage setiap kali ada perubahan
   useEffect(() => {
     localStorage.setItem('matkuls', JSON.stringify(courses));
   }, [courses]);
 
-  // State untuk form tambah/edit
   const [newCourseName, setNewCourseName] = useState('');
   const [newCourseSemester, setNewCourseSemester] = useState('');
   const [editingCourseId, setEditingCourseId] = useState(null);
 
-  // Handler untuk submit form tambah/edit
+  // STATE UNTUK MODAL KONFIRMASI
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [courseIdToDelete, setCourseIdToDelete] = useState(null);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!newCourseName || !newCourseSemester) return;
 
     if (editingCourseId) {
-      // Logika Edit
       setCourses(courses.map(course =>
         course.id === editingCourseId
           ? { ...course, nama_matkul: newCourseName, semester: newCourseSemester }
@@ -36,7 +36,6 @@ function ManageMatkulPage() {
       ));
       setEditingCourseId(null);
     } else {
-      // Logika Tambah
       const newId = courses.length > 0 ? Math.max(...courses.map(c => c.id)) + 1 : 1;
       setCourses([...courses, { id: newId, nama_matkul: newCourseName, semester: newCourseSemester }]);
     }
@@ -45,23 +44,35 @@ function ManageMatkulPage() {
     setNewCourseSemester('');
   };
 
-  // Handler untuk mengaktifkan mode edit
+  // Handler untuk menampilkan modal konfirmasi penghapusan
+  const handleDelete = (id) => {
+    setCourseIdToDelete(id);
+    setShowConfirmModal(true);
+  };
+
+  // Handler saat konfirmasi penghapusan diterima dari modal
+  const confirmDeleteCourse = () => {
+    setCourses(courses.filter(course => course.id !== courseIdToDelete));
+    // Jika yang dihapus sedang diedit, reset mode edit
+    if (editingCourseId === courseIdToDelete) {
+        setEditingCourseId(null);
+        setNewCourseName('');
+        setNewCourseSemester('');
+    }
+    setShowConfirmModal(false);
+    setCourseIdToDelete(null);
+  };
+
+  // Handler saat konfirmasi penghapusan dibatalkan
+  const cancelDeleteCourse = () => {
+    setShowConfirmModal(false);
+    setCourseIdToDelete(null);
+  };
+
   const handleEdit = (course) => {
     setEditingCourseId(course.id);
     setNewCourseName(course.nama_matkul);
     setNewCourseSemester(course.semester);
-  };
-
-  // Handler untuk menghapus mata kuliah
-  const handleDelete = (id) => {
-    if (window.confirm('Apakah Anda yakin ingin menghapus mata kuliah ini?')) {
-      setCourses(courses.filter(course => course.id !== id));
-      if (editingCourseId === id) {
-        setEditingCourseId(null);
-        setNewCourseName('');
-        setNewCourseSemester('');
-      }
-    }
   };
 
   return (
@@ -147,7 +158,7 @@ function ManageMatkulPage() {
                     </button>
                     <button
                       className="btn btn-sm btn-danger"
-                      onClick={() => handleDelete(course.id)}
+                      onClick={() => handleDelete(course.id)} 
                     >
                       Hapus
                     </button>
@@ -162,6 +173,17 @@ function ManageMatkulPage() {
           </tbody>
         </table>
       </div>
+
+      {/* MODAL KONFIRMASI PENGHAPUSAN MATA KULIAH */}
+      <ConfirmationModal
+        show={showConfirmModal}
+        onHide={cancelDeleteCourse}
+        onConfirm={confirmDeleteCourse}
+        title="Konfirmasi Penghapusan Mata Kuliah"
+        message={`Apakah Anda yakin ingin menghapus mata kuliah "${courses.find(c => c.id === courseIdToDelete)?.nama_matkul}"? Ini juga akan menghapus tugas terkait.`}
+        confirmText="Ya, Hapus"
+        confirmVariant="danger"
+      />
     </div>
   );
 }

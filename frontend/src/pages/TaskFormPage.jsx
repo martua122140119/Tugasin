@@ -5,14 +5,12 @@ function TaskFormPage() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  // State untuk data form tugas
   const [judul, setJudul] = useState('');
   const [deskripsi, setDeskripsi] = useState('');
   const [deadline, setDeadline] = useState('');
   const [matkulId, setMatkulId] = useState('');
   const [status, setStatus] = useState('Belum Selesai');
 
-  // Data mata kuliah dari localStorage (untuk dropdown), atau dummy jika kosong
   const [matkuls, setMatkuls] = useState(() => {
     const savedMatkuls = localStorage.getItem('matkuls');
     return savedMatkuls ? JSON.parse(savedMatkuls) : [
@@ -21,7 +19,6 @@ function TaskFormPage() {
     ];
   });
 
-  // Efek untuk mengisi form jika dalam mode edit
   useEffect(() => {
     if (id) {
       const savedTasks = localStorage.getItem('tasks');
@@ -35,7 +32,6 @@ function TaskFormPage() {
         setMatkulId(taskToEdit.matkul_id.toString());
         setStatus(taskToEdit.status);
       } else {
-        console.warn('Tugas tidak ditemukan di localStorage!');
         navigate('/dashboard');
       }
     }
@@ -49,7 +45,6 @@ function TaskFormPage() {
       deadline,
       matkul_id: parseInt(matkulId),
       status,
-      // Tambahkan matkul_name untuk TaskCard display
       matkul: matkuls.find(m => m.id === parseInt(matkulId))?.nama_matkul || 'Tidak Diketahui',
     };
 
@@ -57,16 +52,12 @@ function TaskFormPage() {
     let currentTasks = savedTasks ? JSON.parse(savedTasks) : [];
 
     if (id) {
-      // Logika untuk EDIT tugas
       currentTasks = currentTasks.map(task =>
         task.id === parseInt(id) ? { ...task, ...taskData } : task
       );
-      console.log('Update Tugas di localStorage:', { id: parseInt(id), ...taskData });
     } else {
-      // Logika untuk TAMBAH tugas baru
       const newId = currentTasks.length > 0 ? Math.max(...currentTasks.map(t => t.id)) + 1 : 1;
       currentTasks = [...currentTasks, { id: newId, ...taskData }];
-      console.log('Tambah Tugas Baru ke localStorage:', taskData);
     }
 
     localStorage.setItem('tasks', JSON.stringify(currentTasks));
