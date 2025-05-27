@@ -1,22 +1,31 @@
-// src/pages/DashboardPage.js
-import React, { useState } from 'react';
-import TaskCard from '../components/TaskCard.jsx'; // Sesuaikan ekstensi jika Anda menggunakan .js
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import React, { useState, useEffect } from 'react';
+import TaskCard from '../components/TaskCard.jsx';
+import { useNavigate } from 'react-router-dom';
 
 function DashboardPage() {
-  const navigate = useNavigate(); // Inisialisasi useNavigate
+  const navigate = useNavigate();
 
-  const [tasks, setTasks] = useState([
-    { id: 1, judul: 'Membuat Desain UI/UX', deskripsi: 'Desain wireframe untuk aplikasi web.', deadline: '2025-06-01', status: 'Belum Selesai', matkul: 'Pemrograman Web', matkul_id: 1 },
-    { id: 2, judul: 'Belajar React Hooks', deskripsi: 'Pahami useState, useEffect, useContext.', deadline: '2025-05-28', status: 'Belum Selesai', matkul: 'Pemrograman Web', matkul_id: 1 },
-    { id: 3, judul: 'Presentasi Basis Data', deskripsi: 'Siapkan slide presentasi materi normalisasi database.', deadline: '2025-06-05', status: 'Belum Selesai', matkul: 'Basis Data', matkul_id: 2 },
-    { id: 4, judul: 'Revisi Laporan Akhir', deskripsi: 'Perbaiki bab 1 dan 2 berdasarkan masukan dosen.', deadline: '2025-05-25', status: 'Selesai', matkul: 'Metodologi Penelitian', matkul_id: 3 },
-    { id: 5, judul: 'Diskusi Kelompok AI', deskripsi: 'Diskusikan algoritma klasifikasi untuk proyek AI.', deadline: '2025-06-10', status: 'Belum Selesai', matkul: 'Kecerdasan Buatan', matkul_id: 4 },
-  ]);
+  // Data tugas: Muat dari localStorage, atau gunakan dummy jika kosong
+  const [tasks, setTasks] = useState(() => {
+    const savedTasks = localStorage.getItem('tasks'); // Gunakan key 'tasks'
+    return savedTasks ? JSON.parse(savedTasks) : [
+      { id: 1, judul: 'Membuat Desain UI/UX', deskripsi: 'Desain wireframe untuk aplikasi web.', deadline: '2025-06-01', status: 'Belum Selesai', matkul: 'Pemrograman Web', matkul_id: 1 },
+      { id: 2, judul: 'Belajar React Hooks', deskripsi: 'Pahami useState, useEffect, useContext.', deadline: '2025-05-28', status: 'Belum Selesai', matkul: 'Pemrograman Web', matkul_id: 1 },
+      { id: 3, judul: 'Presentasi Basis Data', deskripsi: 'Siapkan slide presentasi materi normalisasi database.', deadline: '2025-06-05', status: 'Belum Selesai', matkul: 'Basis Data', matkul_id: 2 },
+      { id: 4, judul: 'Revisi Laporan Akhir', deskripsi: 'Perbaiki bab 1 dan 2 berdasarkan masukan dosen.', deadline: '2025-05-25', status: 'Selesai', matkul: 'Metodologi Penelitian', matkul_id: 3 },
+      { id: 5, judul: 'Diskusi Kelompok AI', deskripsi: 'Diskusikan algoritma klasifikasi untuk proyek AI.', deadline: '2025-06-10', status: 'Belum Selesai', matkul: 'Kecerdasan Buatan', matkul_id: 4 },
+    ];
+  });
+
+  // Simpan data tugas ke localStorage setiap kali ada perubahan
+  useEffect(() => {
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+  }, [tasks]);
 
   const [filterStatus, setFilterStatus] = useState('Semua');
   const [filterDeadline, setFilterDeadline] = useState('');
 
+  // Filter tugas berdasarkan status dan deadline
   const filteredTasks = tasks.filter(task => {
     const matchesStatus = filterStatus === 'Semua' || task.status === filterStatus;
     const matchesDeadline = filterDeadline === '' || task.deadline === filterDeadline;
@@ -25,12 +34,12 @@ function DashboardPage() {
 
   // Handler untuk tombol "Tambah Tugas Baru"
   const handleAddTask = () => {
-    navigate('/task-form'); // Navigasi ke halaman form tanpa ID
+    navigate('/task-form');
   };
 
   // Handler untuk tombol "Edit" di TaskCard
   const handleEditTask = (taskId) => {
-    navigate(`/task-form/${taskId}`); // Navigasi ke halaman form dengan ID
+    navigate(`/task-form/${taskId}`);
   };
 
   // Handler untuk tombol "Hapus" di TaskCard (untuk sementara di sini)
@@ -39,7 +48,6 @@ function DashboardPage() {
         setTasks(tasks.filter(task => task.id !== taskId));
     }
   };
-
 
   return (
     <div className="container mt-5">
@@ -76,7 +84,7 @@ function DashboardPage() {
 
       <div className="d-flex justify-content-between align-items-center mb-3">
         <h4>Daftar Tugas</h4>
-        <button className="btn btn-primary" onClick={handleAddTask}> {/* Tambahkan onClick */}
+        <button className="btn btn-primary" onClick={handleAddTask}>
           Tambah Tugas Baru
         </button>
       </div>
@@ -87,7 +95,6 @@ function DashboardPage() {
             .sort((a, b) => new Date(a.deadline) - new Date(b.deadline))
             .map(task => (
               <div key={task.id} className="col-md-6 col-lg-4">
-                {/* Kirim handler edit dan delete ke TaskCard */}
                 <TaskCard
                   task={task}
                   onEdit={handleEditTask}

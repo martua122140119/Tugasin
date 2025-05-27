@@ -1,4 +1,3 @@
-// src/components/Footer.js
 import React from 'react';
 import { useTheme } from '../context/ThemeContext'; // Untuk menyesuaikan warna footer dengan tema
 
@@ -11,7 +10,7 @@ function Footer() {
         <p className="mb-0">
           &copy; {new Date().getFullYear()} Sistem Tracking Tugas dan Proyek Kuliah. Hak Cipta Dilindungi.
         </p>
-        <p className="mb-0">Dibuat dengan ❤️ untuk Mahasiswa Pemrograman Web.</p>
+        <p className="mb-0">Dibuat dengan ❤️ untuk Tugas Besar Pemrograman Web.</p>
       </div>
     </footer>
   );

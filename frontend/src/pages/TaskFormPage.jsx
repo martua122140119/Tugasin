@@ -1,50 +1,45 @@
-// src/pages/TaskFormPage.js
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
 function TaskFormPage() {
-  const { id } = useParams(); // Mengambil ID dari URL jika dalam mode edit
-  const navigate = useNavigate(); // Untuk navigasi setelah submit
+  const { id } = useParams();
+  const navigate = useNavigate();
 
   // State untuk data form tugas
   const [judul, setJudul] = useState('');
   const [deskripsi, setDeskripsi] = useState('');
   const [deadline, setDeadline] = useState('');
-  const [matkulId, setMatkulId] = useState(''); // Akan menyimpan ID mata kuliah
+  const [matkulId, setMatkulId] = useState('');
   const [status, setStatus] = useState('Belum Selesai');
 
-  // Data dummy mata kuliah untuk dropdown (akan diganti dengan data dari API nanti)
-  const dummyMatkuls = [
-    { id: 1, nama_matkul: 'Pemrograman Web' },
-    { id: 2, nama_matkul: 'Basis Data' },
-    { id: 3, nama_matkul: 'Metodologi Penelitian' },
-    { id: 4, nama_matkul: 'Kecerdasan Buatan' },
-  ];
-
-  // Data dummy tugas (digunakan jika dalam mode edit, harusnya dari API)
-  const dummyTasks = [
-    { id: 1, judul: 'Membuat Desain UI/UX', deskripsi: 'Desain wireframe untuk aplikasi web.', deadline: '2025-06-01', status: 'Belum Selesai', matkul_id: 1 },
-    { id: 2, judul: 'Belajar React Hooks', deskripsi: 'Pahami useState, useEffect, useContext.', deadline: '2025-05-28', status: 'Belum Selesai', matkul_id: 1 },
-    { id: 3, judul: 'Presentasi Basis Data', deskripsi: 'Siapkan slide presentasi materi normalisasi database.', deadline: '2025-06-05', status: 'Belum Selesai', matkul_id: 2 },
-  ];
+  // Data mata kuliah dari localStorage (untuk dropdown), atau dummy jika kosong
+  const [matkuls, setMatkuls] = useState(() => {
+    const savedMatkuls = localStorage.getItem('matkuls');
+    return savedMatkuls ? JSON.parse(savedMatkuls) : [
+      { id: 1, nama_matkul: 'Pemrograman Web' },
+      { id: 2, nama_matkul: 'Basis Data' },
+    ];
+  });
 
   // Efek untuk mengisi form jika dalam mode edit
   useEffect(() => {
-    if (id) { // Jika ada ID di URL, berarti mode edit
-      const taskToEdit = dummyTasks.find(task => task.id === parseInt(id));
+    if (id) {
+      const savedTasks = localStorage.getItem('tasks');
+      const tasks = savedTasks ? JSON.parse(savedTasks) : [];
+      const taskToEdit = tasks.find(task => task.id === parseInt(id));
+
       if (taskToEdit) {
         setJudul(taskToEdit.judul);
         setDeskripsi(taskToEdit.deskripsi);
         setDeadline(taskToEdit.deadline);
-        setMatkulId(taskToEdit.matkul_id.toString()); // Convert to string for select input
+        setMatkulId(taskToEdit.matkul_id.toString());
         setStatus(taskToEdit.status);
       } else {
-        // Jika ID tidak ditemukan, mungkin navigasi kembali atau tampilkan error
-        console.warn('Tugas tidak ditemukan!');
-        navigate('/dashboard'); // Kembali ke dashboard
+        console.warn('Tugas tidak ditemukan di localStorage!');
+        navigate('/dashboard');
       }
     }
-  }, [id, navigate, dummyTasks]); // Tambahkan dummyTasks ke dependency array
+  }, [id, navigate]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -53,20 +48,29 @@ function TaskFormPage() {
       deskripsi,
       deadline,
       matkul_id: parseInt(matkulId),
-      status
+      status,
+      // Tambahkan matkul_name untuk TaskCard display
+      matkul: matkuls.find(m => m.id === parseInt(matkulId))?.nama_matkul || 'Tidak Diketahui',
     };
+
+    const savedTasks = localStorage.getItem('tasks');
+    let currentTasks = savedTasks ? JSON.parse(savedTasks) : [];
 
     if (id) {
       // Logika untuk EDIT tugas
-      console.log('Update Tugas:', { id: parseInt(id), ...taskData });
-      // TODO: Nanti akan ada fetch API untuk update tugas
+      currentTasks = currentTasks.map(task =>
+        task.id === parseInt(id) ? { ...task, ...taskData } : task
+      );
+      console.log('Update Tugas di localStorage:', { id: parseInt(id), ...taskData });
     } else {
       // Logika untuk TAMBAH tugas baru
-      console.log('Tambah Tugas Baru:', taskData);
-      // TODO: Nanti akan ada fetch API untuk tambah tugas
+      const newId = currentTasks.length > 0 ? Math.max(...currentTasks.map(t => t.id)) + 1 : 1;
+      currentTasks = [...currentTasks, { id: newId, ...taskData }];
+      console.log('Tambah Tugas Baru ke localStorage:', taskData);
     }
 
-    navigate('/dashboard'); // Kembali ke dashboard setelah submit
+    localStorage.setItem('tasks', JSON.stringify(currentTasks));
+    navigate('/dashboard');
   };
 
   return (
@@ -123,7 +127,7 @@ function TaskFormPage() {
                 required
               >
                 <option value="">Pilih Mata Kuliah</option>
-                {dummyMatkuls.map(matkul => (
+                {matkuls.map(matkul => (
                   <option key={matkul.id} value={matkul.id}>{matkul.nama_matkul}</option>
                 ))}
               </select>

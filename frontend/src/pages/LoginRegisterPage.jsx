@@ -1,10 +1,9 @@
-// src/pages/LoginRegisterPage.js
 import React, { useState } from 'react';
-import { useAuth } from '../context/AuthContext'; // Import useAuth
+import { useAuth } from '../context/AuthContext';
 
 function LoginRegisterPage() {
   const [isLoginMode, setIsLoginMode] = useState(true);
-  const { login, register } = useAuth(); // Dapatkan fungsi login dan register dari context
+  const { login, register } = useAuth();
 
   const [loginEmail, setLoginEmail] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
@@ -13,12 +12,12 @@ function LoginRegisterPage() {
   const [registerEmail, setRegisterEmail] = useState('');
   const [registerPassword, setRegisterPassword] = useState('');
 
-  const [error, setError] = useState(''); // State untuk pesan error
+  const [error, setError] = useState('');
 
   // Handler untuk submit form Login
-  const handleLoginSubmit = async (e) => { // Buat async function
+  const handleLoginSubmit = async (e) => {
     e.preventDefault();
-    setError(''); // Bersihkan error sebelumnya
+    setError('');
     const result = await login(loginEmail, loginPassword);
     if (!result.success) {
       setError(result.message || 'Login gagal. Coba lagi.');
@@ -26,16 +25,15 @@ function LoginRegisterPage() {
   };
 
   // Handler untuk submit form Register
-  const handleRegisterSubmit = async (e) => { // Buat async function
+  const handleRegisterSubmit = async (e) => {
     e.preventDefault();
-    setError(''); // Bersihkan error sebelumnya
+    setError('');
     const result = await register(registerName, registerEmail, registerPassword);
     if (!result.success) {
       setError(result.message || 'Registrasi gagal. Coba lagi.');
     } else {
-        alert("Registrasi berhasil! Silakan login."); // Beri feedback ke user
-        setIsLoginMode(true); // Langsung alihkan ke mode login
-        // Bersihkan form register
+        alert("Registrasi berhasil! Silakan login.");
+        setIsLoginMode(true);
         setRegisterName('');
         setRegisterEmail('');
         setRegisterPassword('');
@@ -52,7 +50,7 @@ function LoginRegisterPage() {
             </div>
             <div className="card-body p-4">
 
-              {error && ( // Tampilkan pesan error jika ada
+              {error && (
                 <div className="alert alert-danger" role="alert">
                   {error}
                 </div>
@@ -94,7 +92,7 @@ function LoginRegisterPage() {
                         setIsLoginMode(false);
                         setLoginEmail('');
                         setLoginPassword('');
-                        setError(''); // Bersihkan error saat beralih
+                        setError('');
                       }}
                     >
                       Belum punya akun? Register di sini
@@ -150,7 +148,7 @@ function LoginRegisterPage() {
                         setRegisterName('');
                         setRegisterEmail('');
                         setRegisterPassword('');
-                        setError(''); // Bersihkan error saat beralih
+                        setError('');
                       }}
                     >
                       Sudah punya akun? Login di sini

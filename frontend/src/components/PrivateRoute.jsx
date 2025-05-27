@@ -1,17 +1,15 @@
-// src/components/PrivateRoute.js
 import React from 'react';
 import { Navigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext'; // Import useAuth
+import { useAuth } from '../context/AuthContext';
 
 function PrivateRoute({ children }) {
-  const { isLoggedIn } = useAuth(); // Dapatkan status login
+  const { isLoggedIn } = useAuth();
 
   if (!isLoggedIn) {
-    // Jika belum login, arahkan ke halaman login
     return <Navigate to="/login" replace />;
   }
 
-  return children; // Jika sudah login, render children (komponen halaman)
+  return children;
 }
 
 export default PrivateRoute;

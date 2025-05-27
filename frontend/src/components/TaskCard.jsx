@@ -1,13 +1,13 @@
-// src/components/TaskCard.jsx
 import React from 'react';
 
+// Fungsi untuk format tanggal agar lebih mudah dibaca
 const formatDate = (dateString) => {
   const options = { year: 'numeric', month: 'long', day: 'numeric' };
   return new Date(dateString).toLocaleDateString('id-ID', options);
 };
 
-// Tambahkan onEdit dan onDelete sebagai props
 function TaskCard({ task, onEdit, onDelete }) {
+  // Menentukan warna badge berdasarkan status
   const statusBadgeClass = task.status === 'Selesai' ? 'bg-success' : 'bg-warning text-dark';
   const statusText = task.status === 'Selesai' ? 'Selesai' : 'Belum Selesai';
 
@@ -24,16 +24,15 @@ function TaskCard({ task, onEdit, onDelete }) {
         </p>
         <p className="card-text">{task.deskripsi}</p>
         <div className="d-flex justify-content-end">
-          {/* Gunakan onEdit dan onDelete yang diterima dari props */}
           <button
             className="btn btn-sm btn-info me-2"
-            onClick={() => onEdit(task.id)} // Panggil onEdit dengan ID tugas
+            onClick={() => onEdit(task.id)}
           >
             Edit
           </button>
           <button
             className="btn btn-sm btn-danger"
-            onClick={() => onDelete(task.id)} // Panggil onDelete dengan ID tugas
+            onClick={() => onDelete(task.id)}
           >
             Hapus
           </button>

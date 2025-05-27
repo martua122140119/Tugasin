@@ -1,4 +1,3 @@
-// src/App.jsx
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import './App.css';
@@ -16,7 +15,7 @@ import TaskFormPage from './pages/TaskFormPage';
 import Footer from './components/Footer';
 import PrivateRoute from './components/PrivateRoute';
 
-import logoImage from './logo.png'; // Pastikan path logo ini benar
+import logoImage from './logo.png';
 
 function App() {
   return (
@@ -24,18 +23,9 @@ function App() {
       <ThemeProvider>
         <AuthProvider>
           <div className="App d-flex flex-column min-vh-100">
-            <AppNavbar /> {/* Gunakan komponen AppNavbar */}
+            <AppNavbar />
 
-            <div className="container mt-4 flex-grow-1">
-              <Routes>
-                <Route path="/" element={<HomePage />} />
-                <Route path="/login" element={<LoginRegisterPage />} />
-                <Route path="/dashboard" element={<PrivateRoute><DashboardPage /></PrivateRoute>} />
-                <Route path="/manage-courses" element={<PrivateRoute><ManageMatkulPage /></PrivateRoute>} />
-                <Route path="/task-form" element={<PrivateRoute><TaskFormPage /></PrivateRoute>} />
-                <Route path="/task-form/:id" element={<PrivateRoute><TaskFormPage /></PrivateRoute>} />
-              </Routes>
-            </div>
+            <AppContentWithAuthCheck />
 
             <Footer />
           </div>
@@ -46,24 +36,28 @@ function App() {
 }
 
 // ==============================================================================
-// KOMPONEN AppNavbar (DI DALAM FILE YANG SAMA)
+// KOMPONEN AppNavbar
 // ==============================================================================
 function AppNavbar() {
   const { theme, toggleTheme } = useTheme();
-  const { isLoggedIn, user, logout } = useAuth(); // Ambil juga objek 'user' dari useAuth()
+  const { isLoggedIn, user, logout } = useAuth(); // Ambil isLoggedIn dari useAuth()
+
+  // Tentukan path untuk link brand secara kondisional
+  const brandLinkPath = isLoggedIn ? "/dashboard" : "/";
 
   return (
-    <nav className={`navbar navbar-expand-lg ${theme === 'light' ? 'navbar-dark bg-dark' : 'navbar-dark bg-secondary'}`}>
+    <nav className={`navbar navbar-expand-lg navbar-dark bg-dark`}>
       <div className="container-fluid">
-        <Link className="navbar-brand d-flex align-items-center" to="/">
+        
+        <Link className="navbar-brand d-flex align-items-center" to={brandLinkPath}>
           <img
             src={logoImage}
             alt="Logo Sistem Tracking Tugas Kuliah"
             width="30"
-            height="30"
+            height="45"
             className="d-inline-block align-text-top me-2"
           />
-          Sistem Tracking Tugas Kuliah
+          Tugasin
         </Link>
 
         <div className="collapse navbar-collapse" id="navbarNav">
@@ -81,10 +75,10 @@ function AppNavbar() {
           </ul>
 
           <div className="d-flex align-items-center">
-            {isLoggedIn ? ( // Tampilkan nama user dan tombol Logout jika sudah login
+            {isLoggedIn ? (
               <>
-                {user && ( // Pastikan objek user ada sebelum mencoba mengakses user.name
-                  <span className="navbar-text me-3 text-light"> {/* text-light untuk visibilitas di navbar dark */}
+                {user && (
+                  <span className="navbar-text me-3 text-white">
                     Halo, {user.name}!
                   </span>
                 )}
@@ -92,7 +86,7 @@ function AppNavbar() {
                   Logout
                 </button>
               </>
-            ) : ( // Tampilkan link Login jika belum login
+            ) : (
               <Link className="btn btn-outline-light me-2" to="/login">
                 Login
               </Link>
@@ -112,6 +106,37 @@ function AppNavbar() {
         </div>
       </div>
     </nav>
+  );
+}
+
+// ==============================================================================
+// KOMPONEN AppContentWithAuthCheck (Tidak berubah)
+// ==============================================================================
+function AppContentWithAuthCheck() {
+  const { isAuthChecked } = useAuth();
+
+  if (!isAuthChecked) {
+    return (
+      <div className="container mt-4 text-center">
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+        <p className="mt-2">Memuat sesi...</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="container mt-4 flex-grow-1">
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/login" element={<LoginRegisterPage />} />
+        <Route path="/dashboard" element={<PrivateRoute><DashboardPage /></PrivateRoute>} />
+        <Route path="/manage-courses" element={<PrivateRoute><ManageMatkulPage /></PrivateRoute>} />
+        <Route path="/task-form" element={<PrivateRoute><TaskFormPage /></PrivateRoute>} />
+        <Route path="/task-form/:id" element={<PrivateRoute><TaskFormPage /></PrivateRoute>} />
+      </Routes>
+    </div>
   );
 }
 

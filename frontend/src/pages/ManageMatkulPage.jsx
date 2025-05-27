@@ -1,23 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 function ManageMatkulPage() {
-  // Data dummy mata kuliah
-  const [courses, setCourses] = useState([
-    { id: 1, nama_matkul: 'Pemrograman Web', semester: 'Genap 2024/2025' },
-    { id: 2, nama_matkul: 'Basis Data', semester: 'Genap 2024/2025' },
-    { id: 3, nama_matkul: 'Struktur Data', semester: 'Ganjil 2024/2025' },
-    { id: 4, nama_matkul: 'Algoritma dan Pemrograman', semester: 'Ganjil 2024/2025' },
-  ]);
+  // Data mata kuliah: Muat dari localStorage, atau gunakan dummy jika kosong
+  const [courses, setCourses] = useState(() => {
+    const savedCourses = localStorage.getItem('matkuls'); // Gunakan key 'matkuls'
+    return savedCourses ? JSON.parse(savedCourses) : [
+      { id: 1, nama_matkul: 'Pemrograman Web', semester: 'Genap 2024/2025' },
+      { id: 2, nama_matkul: 'Basis Data', semester: 'Genap 2024/2025' },
+      { id: 3, nama_matkul: 'Struktur Data', semester: 'Ganjil 2024/2025' },
+      { id: 4, nama_matkul: 'Algoritma dan Pemrograman', semester: 'Ganjil 2024/2025' },
+    ];
+  });
+
+  // Simpan data mata kuliah ke localStorage setiap kali ada perubahan
+  useEffect(() => {
+    localStorage.setItem('matkuls', JSON.stringify(courses));
+  }, [courses]);
 
   // State untuk form tambah/edit
   const [newCourseName, setNewCourseName] = useState('');
   const [newCourseSemester, setNewCourseSemester] = useState('');
-  const [editingCourseId, setEditingCourseId] = useState(null); // ID mata kuliah yang sedang diedit
+  const [editingCourseId, setEditingCourseId] = useState(null);
 
   // Handler untuk submit form tambah/edit
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!newCourseName || !newCourseSemester) return; // Validasi sederhana
+    if (!newCourseName || !newCourseSemester) return;
 
     if (editingCourseId) {
       // Logika Edit
@@ -26,14 +34,13 @@ function ManageMatkulPage() {
           ? { ...course, nama_matkul: newCourseName, semester: newCourseSemester }
           : course
       ));
-      setEditingCourseId(null); // Nonaktifkan mode edit
+      setEditingCourseId(null);
     } else {
       // Logika Tambah
       const newId = courses.length > 0 ? Math.max(...courses.map(c => c.id)) + 1 : 1;
       setCourses([...courses, { id: newId, nama_matkul: newCourseName, semester: newCourseSemester }]);
     }
 
-    // Bersihkan form
     setNewCourseName('');
     setNewCourseSemester('');
   };
@@ -49,7 +56,6 @@ function ManageMatkulPage() {
   const handleDelete = (id) => {
     if (window.confirm('Apakah Anda yakin ingin menghapus mata kuliah ini?')) {
       setCourses(courses.filter(course => course.id !== id));
-      // Jika yang dihapus sedang diedit, reset mode edit
       if (editingCourseId === id) {
         setEditingCourseId(null);
         setNewCourseName('');
@@ -62,7 +68,6 @@ function ManageMatkulPage() {
     <div className="container mt-5">
       <h2 className="mb-4">Manajemen Mata Kuliah</h2>
 
-      {/* Form Tambah/Edit Mata Kuliah */}
       <div className="card mb-4 shadow-sm">
         <div className="card-header bg-info text-white">
           <h5>{editingCourseId ? 'Edit Mata Kuliah' : 'Tambah Mata Kuliah Baru'}</h5>
@@ -115,7 +120,6 @@ function ManageMatkulPage() {
         </div>
       </div>
 
-      {/* Daftar Mata Kuliah */}
       <h4 className="mb-3">Daftar Mata Kuliah</h4>
       <div className="table-responsive">
         <table className="table table-hover table-striped">

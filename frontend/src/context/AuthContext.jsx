@@ -1,17 +1,16 @@
-// src/context/AuthContext.js
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios'; // Import axios
-import API_BASE_URL from '../config'; // Import base URL API
+import axios from 'axios';
+import API_BASE_URL from '../config';
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
+  const [isAuthChecked, setIsAuthChecked] = useState(false); // BARU: State untuk menandai pemeriksaan autentikasi selesai
   const navigate = useNavigate();
 
-  // Konfigurasi instance Axios untuk kemudahan, tambahkan header Authorize nanti
   const api = axios.create({
     baseURL: API_BASE_URL,
     headers: {
@@ -19,7 +18,6 @@ export const AuthProvider = ({ children }) => {
     },
   });
 
-  // Interceptor untuk menambahkan token ke setiap request jika ada
   api.interceptors.request.use(
     (config) => {
       const token = localStorage.getItem('authToken');
@@ -38,52 +36,66 @@ export const AuthProvider = ({ children }) => {
       setIsLoggedIn(true);
       setUser(JSON.parse(userData));
     }
+    setIsAuthChecked(true); // SET INI MENJADI TRUE SETELAH PEMERIKSAAN SELESAI
   }, []);
 
-  // Fungsi untuk proses Login (terhubung ke backend)
+  const getRegisteredUsers = () => {
+    const users = localStorage.getItem('registeredUsers');
+    return users ? JSON.parse(users) : [];
+  };
+
+  const saveRegisteredUsers = (users) => {
+    localStorage.setItem('registeredUsers', JSON.stringify(users));
+  };
+
   const login = async (email, password) => {
     try {
-      const response = await api.post('/auth/login', { email, password }); // Endpoint login backend
+      const registeredUsers = getRegisteredUsers();
+      const foundUser = registeredUsers.find(
+        (u) => u.email === email && u.password === password
+      );
 
-      // Asumsi backend mengembalikan { token: "...", user: { id: ..., name: ..., email: ... } }
-      const { token, user } = response.data;
+      if (foundUser) {
+        const dummyResponse = {
+          success: true,
+          token: 'dummy-jwt-token-123',
+          user: { id: foundUser.id, name: foundUser.name, email: foundUser.email },
+        };
 
-      setIsLoggedIn(true);
-      setUser(user);
-      localStorage.setItem('authToken', token);
-      localStorage.setItem('userData', JSON.stringify(user));
-
-      navigate('/dashboard'); // Arahkan ke dashboard setelah login
-      return { success: true };
+        setIsLoggedIn(true);
+        setUser(dummyResponse.user);
+        localStorage.setItem('authToken', dummyResponse.token);
+        localStorage.setItem('userData', JSON.stringify(dummyResponse.user));
+        navigate('/dashboard');
+        return { success: true };
+      } else {
+        return { success: false, message: 'Email atau password salah.' };
+      }
     } catch (error) {
-      console.error('Login error:', error.response ? error.response.data : error.message);
-      const errorMessage = error.response && error.response.data && error.response.data.message
-                           ? error.response.data.message
-                           : 'Email atau password salah.'; // Pesan default jika error tidak spesifik
-      return { success: false, message: errorMessage };
+      console.error('Login error:', error);
+      return { success: false, message: 'Terjadi kesalahan saat login.' };
     }
   };
 
-  // Fungsi untuk proses Register (terhubung ke backend)
   const register = async (name, email, password) => {
     try {
-      const response = await api.post('/auth/register', { name, email, password }); // Endpoint register backend
+      const registeredUsers = getRegisteredUsers();
+      if (registeredUsers.some((u) => u.email === email)) {
+        return { success: false, message: 'Email sudah terdaftar. Silakan login.' };
+      }
 
-      // Asumsi backend mengembalikan { message: "...", user: { ... } } atau hanya { message: "..." }
-      console.log('Register success:', response.data);
+      const newUserId = registeredUsers.length > 0 ? Math.max(...registeredUsers.map(u => u.id)) + 1 : 1;
+      const newUser = { id: newUserId, name, email, password };
+      registeredUsers.push(newUser);
+      saveRegisteredUsers(registeredUsers);
 
-      navigate('/login'); // Setelah register, biasanya pengguna diarahkan ke halaman login
-      return { success: true, message: response.data.message || 'Registrasi berhasil!' };
+      return { success: true, message: 'Registrasi berhasil! Silakan login.' };
     } catch (error) {
-      console.error('Register error:', error.response ? error.response.data : error.message);
-      const errorMessage = error.response && error.response.data && error.response.data.message
-                           ? error.response.data.message
-                           : 'Registrasi gagal. Email mungkin sudah terdaftar.'; // Pesan default jika error tidak spesifik
-      return { success: false, message: errorMessage };
+      console.error('Register error:', error);
+      return { success: false, message: 'Terjadi kesalahan saat registrasi.' };
     }
   };
 
-  // Fungsi untuk proses Logout
   const logout = () => {
     setIsLoggedIn(false);
     setUser(null);
@@ -93,7 +105,8 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, user, login, register, logout, api }}> {/* Tambahkan 'api' di value */}
+    // BARU: Tambahkan isAuthChecked ke value Context
+    <AuthContext.Provider value={{ isLoggedIn, user, login, register, logout, api, isAuthChecked }}>
       {children}
     </AuthContext.Provider>
   );
