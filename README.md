@@ -11,8 +11,6 @@ Aplikasi web ini dirancang untuk membantu mahasiswa mengelola dan memantau semua
 
 ## Struktur Proyek
 
-## Struktur Proyek
-
 ### Front-end (React)
 
 ```plaintext
