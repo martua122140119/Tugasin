@@ -6,8 +6,8 @@ Aplikasi web ini dirancang untuk membantu mahasiswa mengelola dan memantau semua
 
 ## Link Repositori GitHub
 
-- **Frontend (React JS):** [Isikan Link ke repositori frontend Anda di GitHub]
-- **Backend (Python/Pyramid):** [Isikan Link ke repositori backend Anda di GitHub, jika terpisah]
+- **Frontend (React JS):** (https://github.com/martua122140119/Tugasin.git)
+- **Backend (Python/Pyramid):** (https://github.com/martua122140119/Tugasin.git)
 
 ## Struktur Proyek
 
